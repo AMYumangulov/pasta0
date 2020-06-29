@@ -10,51 +10,68 @@
             <div class="descs">
                 <div v-for="descs in schedule.descs" :key="descs.serviceTime">
                     <div class="desc">
-                        {{ descs.time }}  <a href="#"> {{ descs.desc }} </a>
+                        {{ descs.time }} <a href="#"> {{ descs.desc }} </a>
                     </div>
                 </div>
             </div>
 
         </div>
+        <button class="v_catalog-item__show-info"
+                @click="showPopupInfo"
+        >Добавить занятие
+        </button>
+        <add_Lesson v-if="isInfoPopupVisible"
+                    @closePopup="closeInfoPopup"
+                    class="popup"
+        >
+            <div class="form">
+                <p>Lesson</p>
+                <input type="text">
+            </div>
+            <div class="form">
+                <p>Auditor</p>
+                <input type="text">
+            </div>
+            <div class="form">
+                <p>Date</p>
+                <input type="text">
+            </div>
+            <div class="form">
+                <p>Description</p>
+                <input type="text">
+            </div>
+            <div class="form">
+                <p>Repeat</p>
+                <div class="popup__radio-group">
+                    <div class="radio">
+                        <input type="radio" id="age1" name="age" value="30">
+                        <label for="age1">каждый день</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="age2" name="age" value="60">
+                        <label for="age2">еженедельно</label>
+                    </div >
+                    <div class="radio">
+                        <input type="radio" id="age3" name="age" value="100">
+                        <label for="age3">2 раза в неделю</label>
+                    </div>
+                </div>
+            </div>
+        </add_Lesson>
 
     </div>
 </template>
 
-<style>
-    .schedules {
-        display: flex;
-        flex-direction: row;
-        /*border: aqua solid 1px;*/
-    }
-
-    .date {
-        font-size: 30px;
-        font-weight: 600;
-        /*border: red solid 1px;*/
-    }
-
-    .descs {
-        margin-left: 30px;
-        /*border: green solid 1px;*/
-    }
-
-    .desc {
-        margin-top: 10px
-        /*border: blue solid 1px;*/
-    }
-
-    .date > p {
-        margin-top: 0
-    }
-
-
-</style>
 
 <script>
+    import add_Lesson from '../components/add_Lesson'
+
     export default {
+        components: {add_Lesson},
         name: 'schedules',
         data: () => {
             return {
+                isInfoPopupVisible: false,
                 schedules: [
                     {
                         date: '12 марта',
@@ -91,26 +108,64 @@
                 description: 'расписание'
             }
         },
-        computed: {
-            filteredList: function (dt) {
-
-                /*var date = dt;*/
-
-                var date = {
-                    toString: function () {
-                        return dt;
-                    }
-                };
-
-                alert(dt);
-
-                return this.times.filter(function (elem) {
-
-                    if (date === '') return true;
-                    else return elem.date.indexOf(date) > -1;
-                })
+        methods: {
+            showPopupInfo() {
+                this.isInfoPopupVisible = true;
+            },
+            closeInfoPopup() {
+                this.isInfoPopupVisible = false;
             }
         }
     }
 </script>
 
+<style>
+    .popup {
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .form {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 10px;
+
+    }
+
+    .popup__radio-group {
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+        margin-bottom: 10px;
+    }
+
+    .schedules {
+        display: flex;
+        flex-direction: row;
+        /*border: aqua solid 1px;*/
+    }
+
+    .date {
+        font-size: 30px;
+        font-weight: 600;
+        /*border: red solid 1px;*/
+    }
+
+    .descs {
+        margin-left: 30px;
+        /*border: green solid 1px;*/
+    }
+
+    .desc {
+        margin-top: 10px
+        /*border: blue solid 1px;*/
+    }
+
+    .date > p {
+        margin-top: 0
+    }
+
+
+</style>
