@@ -1,21 +1,24 @@
 <template>
-    <div class="v-popup">
-        <div class="v-popup__header">
-            <span>Добавить занятие</span>
-            <span>
+    <div class="popup-wrapper" ref="popup-wrapper">
+        <div class="v-popup" id="popup">
+            <div class="v-popup__header">
+                <span>Добавить занятие</span>
+                <span>
                 <i
                         class="material-icons"
                         @click="closePopup"
                 >close</i>
             </span>
-        </div>
-        <div class="v-popup__content">
-            <slot></slot>
-        </div>
-        <div class="v-popup__footer">
-            <button class="close_modal"
-                    @click="closePopup">Close</button>
-            <button class="submit_btn">Add</button>
+            </div>
+            <div class="v-popup__content">
+                <slot></slot>
+            </div>
+            <div class="v-popup__footer">
+                <button class="close_modal"
+                        @click="closePopup">Close
+                </button>
+                <button class="submit_btn">Add</button>
+            </div>
         </div>
     </div>
 </template>
@@ -23,42 +26,58 @@
 <script>
     export default {
         name: "v-popup",
-        props:{},
         data() {
-            return{}
+            return {}
+        },
+        mounted() {
+            const vm = this
+            document.addEventListener('click', vm.closePopup)
+            console.log('addEventListener')
+        },
+        destroyed() {
+            const vm = this
+            document.removeEventListener('click', vm.closePopup)
+            console.log('removeEventListener')
         },
         methods: {
-            closePopup() {
-                this.$emit('closePopup')
+            closePopup({target}) {
+                if (!document.getElementById("popup").contains(target)) {
+                    this.$emit('closePopup')
+                    console.log('closePopup');
+                }
             }
         }
     }
 </script>
 
 <style lang="scss">
-    .v-popup{
+    .v-popup {
         padding: 16px;
         position: fixed;
         top: 50px;
         width: 400px;
         background: #ffffff;
         box-shadow: 0 0 17px 0 #e7e7e7;
-        &__header, &__footer{
+
+        &__header, &__footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        &__content{
+
+        &__content {
             display: flex;
             flex-direction: column;
 
         }
-        .submit_btn{
+
+        .submit_btn {
             padding: 8px;
             color: #ffffff;
             background: #26ae68;
         }
-        .close_modal{
+
+        .close_modal {
             padding: 8px;
             color: #ffffff;
             background: red;

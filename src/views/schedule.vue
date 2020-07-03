@@ -50,7 +50,7 @@
                     <div class="radio">
                         <input type="radio" id="age2" name="age" value="60">
                         <label for="age2">еженедельно</label>
-                    </div >
+                    </div>
                     <div class="radio">
                         <input type="radio" id="age3" name="age" value="100">
                         <label for="age3">2 раза в неделю</label>
