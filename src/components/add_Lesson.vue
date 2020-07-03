@@ -6,7 +6,7 @@
                 <span>
                 <i
                         class="material-icons"
-                        @click="closePopup"
+                        @click="$emit('closePopup')"
                 >close</i>
             </span>
             </div>
@@ -15,7 +15,7 @@
             </div>
             <div class="v-popup__footer">
                 <button class="close_modal"
-                        @click="closePopup">Close
+                        @click="$emit('closePopup')">Close
                 </button>
                 <button class="submit_btn">Add</button>
             </div>
@@ -29,10 +29,12 @@
         data() {
             return {}
         },
-        mounted() {
+        created() {
             const vm = this
-            document.addEventListener('click', vm.closePopup)
-            console.log('addEventListener')
+            setTimeout(() => {
+                document.addEventListener('click', vm.closePopup)
+                console.log('addEventListener')
+            })
         },
         destroyed() {
             const vm = this
