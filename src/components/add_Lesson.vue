@@ -4,20 +4,21 @@
             <div class="v-popup__header">
                 <span>Добавить занятие</span>
                 <span>
-                <i
-                        class="material-icons"
-                        @click="$emit('closePopup')"
-                >close</i>
+                <i class="material-icons" @click="$emit('closePopup')" >
+                    close
+                </i>
             </span>
             </div>
             <div class="v-popup__content">
                 <slot></slot>
             </div>
             <div class="v-popup__footer">
-                <button class="close_modal"
-                        @click="$emit('closePopup')">Close
+                <button class="close_modal" @click="$emit('closePopup')">
+                    Close
                 </button>
-                <button class="submit_btn">Add</button>
+                <button class="submit_btn" @click="$emit('AddLesson')">
+                    Add
+                </button>
             </div>
         </div>
     </div>
@@ -33,19 +34,16 @@
             const vm = this
             setTimeout(() => {
                 document.addEventListener('click', vm.closePopup)
-                console.log('addEventListener')
             })
         },
         destroyed() {
             const vm = this
             document.removeEventListener('click', vm.closePopup)
-            console.log('removeEventListener')
         },
         methods: {
             closePopup({target}) {
                 if (!document.getElementById("popup").contains(target)) {
                     this.$emit('closePopup')
-                    console.log('closePopup');
                 }
             }
         }

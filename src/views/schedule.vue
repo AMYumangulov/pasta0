@@ -16,43 +16,43 @@
             </div>
 
         </div>
-        <button class="v_catalog-item__show-info"
-                @click="showPopupInfo"
-        >Добавить занятие
+        <button class="v_catalog-item__show-info" @click="showPopupInfo">
+            Добавить занятие
         </button>
-        <add_Lesson v-if="isInfoPopupVisible"
-                    @closePopup="closeInfoPopup"
-                    class="popup"
-        >
+        <add_Lesson v-if="isInfoPopupVisible" @closePopup="closeInfoPopup" @AddLesson="addRow" class="popup">
             <div class="form">
                 <p>Lesson</p>
-                <input type="text">
+                <input type="text" v-model="lesson">
             </div>
             <div class="form">
                 <p>Auditor</p>
-                <input type="text">
+                <input type="text" v-model="Auditor">
             </div>
             <div class="form">
                 <p>Date</p>
-                <input type="text">
+                <input type="text" v-model="date">
+            </div>
+            <div class="form">
+                <p>Time</p>
+                <input type="text" v-model="time">
             </div>
             <div class="form">
                 <p>Description</p>
-                <input type="text">
+                <input type="text" v-model="Description">
             </div>
             <div class="form">
                 <p>Repeat</p>
                 <div class="popup__radio-group">
                     <div class="radio">
-                        <input type="radio" id="age1" name="age" value="30">
+                        <input type="radio" id="age1" name="age" value="every day" v-model="Repeat">
                         <label for="age1">каждый день</label>
                     </div>
                     <div class="radio">
-                        <input type="radio" id="age2" name="age" value="60">
+                        <input type="radio" id="age2" name="age" value="every week" v-model="Repeat">
                         <label for="age2">еженедельно</label>
                     </div>
                     <div class="radio">
-                        <input type="radio" id="age3" name="age" value="100">
+                        <input type="radio" id="age3" name="age" value="Two times per week" v-model="Repeat">
                         <label for="age3">2 раза в неделю</label>
                     </div>
                 </div>
@@ -72,6 +72,12 @@
         data: () => {
             return {
                 isInfoPopupVisible: false,
+                date: '',
+                time: '',
+                lesson: '',
+                Auditor: '',
+                Description: '',
+                Repeat: '',
                 schedules: [
                     {
                         date: '12 марта',
@@ -85,24 +91,6 @@
                                 desc: 'Теор вер 3 курс'
                             }
                         ]
-                    },
-                    {
-                        date: '14 марта',
-                        descs: [
-                            {
-                                time: '14:00',
-                                desc: 'Лин. Анализ, ауд.215, 3602'
-                            }
-                        ]
-                    },
-                    {
-                        date: '15 марта',
-                        descs: [
-                            {
-                                time: '11:10',
-                                desc: 'Мат стат'
-                            }
-                        ]
                     }
                 ],
                 description: 'расписание'
@@ -111,9 +99,31 @@
         methods: {
             showPopupInfo() {
                 this.isInfoPopupVisible = true;
+                this.date = '';
+                this.time = '';
+                this.lesson = '';
+                this.Auditor = '';
+                this.Description = '';
             },
             closeInfoPopup() {
                 this.isInfoPopupVisible = false;
+            },
+            addRow() {
+                if (this.date) {
+                    this.schedules.push({
+                        date: this.date,
+                        descs: [
+                            {
+                                time: this.time,
+                                desc: this.Description + ' ' + this.lesson + ' ' + this.Auditor
+                            }
+                        ]
+                    })
+
+                    this.isInfoPopupVisible = false;
+                } else {
+                    alert("Необходимо ввести дату!")
+                }
             }
         }
     }
