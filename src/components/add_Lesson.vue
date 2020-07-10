@@ -16,8 +16,11 @@
         <button class="close_modal" @click="$emit('closePopup')">
           Close
         </button>
-        <button class="submit_btn" @click="$emit('AddLesson')">
+        <button class="submit_btn" @click="$emit('AddLesson')" v-if="edit==0">
           Add
+        </button>
+        <button class="submit_btn" @click="$emit('SaveLesson')" v-if="edit==1">
+          Save
         </button>
       </div>
     </div>
@@ -27,6 +30,7 @@
 <script>
     export default {
         name: "v-popup",
+        props: ['edit'],
         data() {
             return {}
         },
