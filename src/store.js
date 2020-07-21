@@ -19,12 +19,12 @@ export default new Vuex.Store({
         date: "2020-07-02"
       }
     ],
-    shedulesDescriptions: [
+    Descriptions: [
       {
         id: 1,
         pId: 1,
         time: "11:10",
-        shedulesDescription: "",
+        Description: "",
         lesson: "Лин. Анализ",
         auditor: "ауд.215",
         repeat: 0,
@@ -34,7 +34,7 @@ export default new Vuex.Store({
         id: 2,
         pId: 1,
         time: '13:30',
-        shedulesDescription: 'Теор вер 3 курс',
+        Description: 'Теор вер 3 курс',
         lesson: "Лин. Анализ",
         auditor: "ауд.215",
         repeat: 0,
@@ -44,7 +44,7 @@ export default new Vuex.Store({
         id: 3,
         pId: 2,
         time: '13:30',
-        shedulesDescription: 'Теор вер 3 курс',
+        Description: 'Теор вер 3 курс',
         lesson: "Лин. Анализ",
         auditor: "ауд.215",
         repeat: 0,
@@ -62,18 +62,18 @@ export default new Vuex.Store({
     getSchedulesDates: state => {
       return state.schedulesDates;
     },
-    getshedulesDescriptionsById: state => id => {
-      return state.shedulesDescriptions.filter(c => c.id === window.Number(id))[0] || null;
+    getDescriptionsById: state => id => {
+      return state.Descriptions.filter(c => c.id === window.Number(id))[0] || null;
     }
   },
   mutations: {
     setCars(state, cars) {
       state.cars = cars;
     },
-    setShedulesDescriptions(state, Descriptions) {
-      state.shedulesDescriptions = Descriptions;
+    setDescriptions(state, Descriptions) {
+      state.Descriptions = Descriptions;
     },
-    setSchedulesDatesById(state, Dates) {
+    setSchedulesDates(state, Dates) {
       state.schedulesDates = Dates;
     }
   },

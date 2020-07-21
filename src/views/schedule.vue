@@ -6,7 +6,7 @@
         <p>{{schedule.date}}</p>
       </div>
       <div class="descs">
-        <div v-for="descs in shedulesDescriptions" :key="descs.serviceTime">
+        <div v-for="descs in Descriptions" :key="descs.serviceTime">
           <div class="desc" v-if="schedule.id == descs.pId">
             <span class="material-icons" @click="findLesson(descs.id)">
               create
@@ -43,7 +43,7 @@
       </div>
       <div class="form">
         <p>Description</p>
-        <input type="text" v-model="shedulesDescription">
+        <input type="text" v-model="Description">
       </div>
       <div class="form">
         <p>Repeat</p>
@@ -71,10 +71,21 @@
 
 <script>
   import add_Lesson from '../components/add_Lesson'
+  import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
   export default {
     components: {add_Lesson},
     name: 'schedules',
+    computed: {
+      ...mapState({
+        schedulesDates: 'schedulesDates',
+        Descriptions: 'Descriptions'
+      }),
+      ...mapGetters({
+        getSchedulesDatesById: 'getSchedulesDatesById',
+        getSchedulesDates: 'getSchedulesDates'
+      })
+    },
     data: () => {
       return {
         isInfoPopupVisible: false,
@@ -82,57 +93,23 @@
         time: '',
         lesson: '',
         auditor: '',
-        shedulesDescription: '',
+        Description: '',
         repeat: '',
         group: '',
         pEdit: 0,
         editId: -1,
-        schedulesDates: [
-          {
-            id: 1,
-            date: "2020-07-01"
-          },
-          {
-            id: 2,
-            date: "2020-07-02"
-          }
-        ],
-        shedulesDescriptions: [
-          {
-            id: 1,
-            pId: 1,
-            time: "11:10",
-            shedulesDescription: "",
-            lesson: "Лин. Анализ",
-            auditor: "ауд.215",
-            repeat: 0,
-            group: "3360"
-          },
-          {
-            id: 2,
-            pId: 1,
-            time: '13:30',
-            shedulesDescription: 'Теор вер 3 курс',
-            lesson: "Лин. Анализ",
-            auditor: "ауд.215",
-            repeat: 0,
-            group: "3360"
-          },
-          {
-            id: 3,
-            pId: 2,
-            time: '13:30',
-            shedulesDescription: 'Теор вер 3 курс',
-            lesson: "Лин. Анализ",
-            auditor: "ауд.215",
-            repeat: 0,
-            group: "3360"
-          }
-        ],
         description: 'расписание'
       }
     },
     methods: {
+      ...mapActions({
+        getDefaultCars: 'getDefaultCars'
+      }),
+      ...mapMutations({
+        setCars: 'setCars',
+        setSchedulesDates: 'setSchedulesDates',
+        setDescriptions: 'setDescriptions'
+      }),
       showPopupInfo() {
         this.isInfoPopupVisible = true;
         this.date = '';
@@ -145,44 +122,65 @@
       closeInfoPopup() {
         this.isInfoPopupVisible = false;
       },
+      submit() {
+        const schedulesDates = this.schedulesDates;
+        const schedulesDate = {
+          id: schedulesDates.length + 1,
+          date: '2020-17-02'
+        };
+
+        this.setSchedulesDates([schedulesDate].concat(schedulesDates));
+
+      },
       addRow() {
         let maxPId = this.schedulesDates.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
 
         let findDate = this.schedulesDates.find(e => e.date === this.date);
 
+        let schedulesDates = this.schedulesDates;
+
+        let schedulesDate = {
+          id: schedulesDates.length + 1,
+          date: this.date
+        };
+
+        let Descriptions = this.Descriptions;
+        let maxId = Descriptions.length + 1;
+
+        console.log(Descriptions);
+
+        let schedulesDescription = {
+          time: this.time,
+          id: maxId,
+          pId: maxPId,
+          Description: this.Description,
+          lesson: this.lesson,
+          auditor: this.auditor,
+          repeat: 0,
+          group: "3360"
+        };
+
+
         if (findDate) {
           maxPId = findDate.id
         }
 
-        const maxId = this.shedulesDescriptions.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
+        //
 
         if (this.date) {
           if (!findDate) {
-            this.schedulesDates.push({
-              date: this.date,
-              id: maxPId
-            });
-
+            this.setSchedulesDates([schedulesDate].concat(schedulesDates));
           }
-          this.shedulesDescriptions.push({
 
-            time: this.time,
-            id: maxId,
-            pId: maxPId,
-            shedulesDescription: this.shedulesDescription,
-            lesson: this.lesson,
-            auditor: this.auditor,
-            repeat: 0,
-            group: "3360"
+          this.setDescriptions([schedulesDescription].concat(Descriptions));
 
-          });
           this.isInfoPopupVisible = false;
         } else {
           alert("Необходимо ввести дату!")
         }
       },
       findLesson(id) {
-        let findLes = this.shedulesDescriptions.find(e => e.id === id);
+        let findLes = this.Descriptions.find(e => e.id === id);
         let findDate = this.schedulesDates.find(e => e.id === findLes.pId);
 
         this.isInfoPopupVisible = true;
@@ -201,15 +199,15 @@
 
       },
       changelesson() {
-        const index = this.shedulesDescriptions.findIndex(n => n.id === this.editId);
+        const index = this.Descriptions.findIndex(n => n.id === this.editId);
 
-        let findLes = this.shedulesDescriptions.find(e => e.id === this.editId);
+        let findLes = this.Descriptions.find(e => e.id === this.editId);
 
         if (index !== -1) {
-          this.shedulesDescriptions.splice(index, 1);
+          this.Descriptions.splice(index, 1);
         }
 
-        this.shedulesDescriptions.push({
+        this.Descriptions.push({
 
           time: this.time,
           id: findLes.id,
