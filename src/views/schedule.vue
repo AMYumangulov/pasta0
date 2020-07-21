@@ -19,7 +19,8 @@
     <button class="v_catalog-item__show-info" @click="showPopupInfo">
       Добавить занятие
     </button>
-    <add_Lesson :edit="pEdit" v-if="isInfoPopupVisible" @closePopup="closeInfoPopup" @AddLesson="addRow" @SaveLesson="changelesson" class="popup">
+    <add_Lesson :edit="pEdit" v-if="isInfoPopupVisible" @closePopup="closeInfoPopup" @AddLesson="addRow"
+                @SaveLesson="changelesson" class="popup">
       <div class="form">
         <p>Lesson</p>
         <input type="text" v-model="lesson">
@@ -63,166 +64,168 @@
       </div>
     </add_Lesson>
 
+
   </div>
 </template>
 
 
 <script>
-    import add_Lesson from '../components/add_Lesson'
+  import add_Lesson from '../components/add_Lesson'
 
-    export default {
-        components: {add_Lesson},
-        name: 'schedules',
-        data: () => {
-            return {
-                isInfoPopupVisible: false,
-                date: '',
-                time: '',
-                lesson: '',
-                auditor: '',
-                shedulesDescription: '',
-                repeat: '',
-                group: '',
-                pEdit: 0,
-                editId: -1,
-                schedulesDates: [
-                    {
-                        id: 1,
-                        date: "2020-07-01"
-                    },
-                    {
-                        id: 2,
-                        date: "2020-07-02"
-                    }
-                ],
-                shedulesDescriptions: [
-                    {
-                        id: 1,
-                        pId: 1,
-                        time: "11:10",
-                        shedulesDescription: "",
-                        lesson: "Лин. Анализ",
-                        auditor: "ауд.215",
-                        repeat: 0,
-                        group: "3360"
-                    },
-                    {
-                        id: 2,
-                        pId: 1,
-                        time: '13:30',
-                        shedulesDescription: 'Теор вер 3 курс',
-                        lesson: "Лин. Анализ",
-                        auditor: "ауд.215",
-                        repeat: 0,
-                        group: "3360"
-                    },
-                    {
-                        id: 3,
-                        pId: 2,
-                        time: '13:30',
-                        shedulesDescription: 'Теор вер 3 курс',
-                        lesson: "Лин. Анализ",
-                        auditor: "ауд.215",
-                        repeat: 0,
-                        group: "3360"
-                    }
-                ],
-                description: 'расписание'
-            }
-        },
-        methods: {
-            showPopupInfo() {
-                this.isInfoPopupVisible = true;
-                this.date = '';
-                this.time = '';
-                this.lesson = '';
-                this.auditor = '';
-                this.shedulesDescription = '';
-                this.pEdit = 0;
-            },
-            closeInfoPopup() {
-                this.isInfoPopupVisible = false;
-            },
-            addRow() {
-                var maxPId = this.schedulesDates.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
-                let findDate = this.schedulesDates.find(e => e.date === this.date);
+  export default {
+    components: {add_Lesson},
+    name: 'schedules',
+    data: () => {
+      return {
+        isInfoPopupVisible: false,
+        date: '',
+        time: '',
+        lesson: '',
+        auditor: '',
+        shedulesDescription: '',
+        repeat: '',
+        group: '',
+        pEdit: 0,
+        editId: -1,
+        schedulesDates: [
+          {
+            id: 1,
+            date: "2020-07-01"
+          },
+          {
+            id: 2,
+            date: "2020-07-02"
+          }
+        ],
+        shedulesDescriptions: [
+          {
+            id: 1,
+            pId: 1,
+            time: "11:10",
+            shedulesDescription: "",
+            lesson: "Лин. Анализ",
+            auditor: "ауд.215",
+            repeat: 0,
+            group: "3360"
+          },
+          {
+            id: 2,
+            pId: 1,
+            time: '13:30',
+            shedulesDescription: 'Теор вер 3 курс',
+            lesson: "Лин. Анализ",
+            auditor: "ауд.215",
+            repeat: 0,
+            group: "3360"
+          },
+          {
+            id: 3,
+            pId: 2,
+            time: '13:30',
+            shedulesDescription: 'Теор вер 3 курс',
+            lesson: "Лин. Анализ",
+            auditor: "ауд.215",
+            repeat: 0,
+            group: "3360"
+          }
+        ],
+        description: 'расписание'
+      }
+    },
+    methods: {
+      showPopupInfo() {
+        this.isInfoPopupVisible = true;
+        this.date = '';
+        this.time = '';
+        this.lesson = '';
+        this.auditor = '';
+        this.shedulesDescription = '';
+        this.pEdit = 0;
+      },
+      closeInfoPopup() {
+        this.isInfoPopupVisible = false;
+      },
+      addRow() {
+        let maxPId = this.schedulesDates.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
 
-                if (findDate) {
-                    maxPId = findDate.id
-                }
+        let findDate = this.schedulesDates.find(e => e.date === this.date);
 
-                const maxId = this.shedulesDescriptions.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
-
-                if (this.date) {
-                    if (!findDate) {
-                        this.schedulesDates.push({
-                            date: this.date,
-                            id: maxPId
-                        });
-
-                    }
-                    this.shedulesDescriptions.push({
-
-                        time: this.time,
-                        id: maxId,
-                        pId: maxPId,
-                        shedulesDescription: this.shedulesDescription,
-                        lesson: this.lesson,
-                        auditor: this.auditor,
-                        repeat: 0,
-                        group: "3360"
-
-                    });
-                    this.isInfoPopupVisible = false;
-                } else {
-                    alert("Необходимо ввести дату!")
-                }
-            },
-            findLesson(id) {
-                let findLes = this.shedulesDescriptions.find(e => e.id === id);
-                let findDate = this.schedulesDates.find(e => e.id === findLes.pId);
-
-                this.isInfoPopupVisible = true;
-
-                this.date= findDate.date;
-                this.time= findLes.time;
-                this.lesson= findLes.lesson;
-                this.auditor= findLes.auditor;
-                this.shedulesDescription= findLes.shedulesDescription;
-                this.repeat= findLes.repeat;
-                this.group= findLes.group;
-                this.pEdit = 1;
-
-                this.editId = id;
-
-
-            },
-            changelesson() {
-                const index = this.shedulesDescriptions.findIndex(n => n.id === this.editId);
-
-                let findLes = this.shedulesDescriptions.find(e => e.id === this.editId);
-
-                if (index !== -1) {
-                    this.shedulesDescriptions.splice(index, 1);
-                }
-
-                this.shedulesDescriptions.push({
-
-                    time: this.time,
-                    id: findLes.id,
-                    pId: findLes.pId,
-                    shedulesDescription: this.shedulesDescription,
-                    lesson: this.lesson,
-                    auditor: this.auditor,
-                    repeat: 0,
-                    group: "3360"
-
-                });
-
-                this.isInfoPopupVisible = false;
-            }
+        if (findDate) {
+          maxPId = findDate.id
         }
+
+        const maxId = this.shedulesDescriptions.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
+
+        if (this.date) {
+          if (!findDate) {
+            this.schedulesDates.push({
+              date: this.date,
+              id: maxPId
+            });
+
+          }
+          this.shedulesDescriptions.push({
+
+            time: this.time,
+            id: maxId,
+            pId: maxPId,
+            shedulesDescription: this.shedulesDescription,
+            lesson: this.lesson,
+            auditor: this.auditor,
+            repeat: 0,
+            group: "3360"
+
+          });
+          this.isInfoPopupVisible = false;
+        } else {
+          alert("Необходимо ввести дату!")
+        }
+      },
+      findLesson(id) {
+        let findLes = this.shedulesDescriptions.find(e => e.id === id);
+        let findDate = this.schedulesDates.find(e => e.id === findLes.pId);
+
+        this.isInfoPopupVisible = true;
+
+        this.date = findDate.date;
+        this.time = findLes.time;
+        this.lesson = findLes.lesson;
+        this.auditor = findLes.auditor;
+        this.shedulesDescription = findLes.shedulesDescription;
+        this.repeat = findLes.repeat;
+        this.group = findLes.group;
+        this.pEdit = 1;
+
+        this.editId = id;
+
+
+      },
+      changelesson() {
+        const index = this.shedulesDescriptions.findIndex(n => n.id === this.editId);
+
+        let findLes = this.shedulesDescriptions.find(e => e.id === this.editId);
+
+        if (index !== -1) {
+          this.shedulesDescriptions.splice(index, 1);
+        }
+
+        this.shedulesDescriptions.push({
+
+          time: this.time,
+          id: findLes.id,
+          pId: findLes.pId,
+          shedulesDescription: this.shedulesDescription,
+          lesson: this.lesson,
+          auditor: this.auditor,
+          repeat: 0,
+          group: "3360"
+
+        });
+
+        this.isInfoPopupVisible = false;
+      }
     }
+  }
 </script>
 
 <style>
