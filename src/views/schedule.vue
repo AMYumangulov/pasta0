@@ -8,10 +8,9 @@
       <div class="descs">
         <div v-for="descs in Descriptions" :key="descs.serviceTime">
           <div class="desc" v-if="schedule.id == descs.pId">
-            <span class="material-icons" @click="findLesson(descs.id)">
-              create
-            </span>
+            <span class="material-icons" @click="findLesson(descs.id)">create</span>
             {{ descs.time }} <a href="#"> {{ descs.lesson + ' ' + descs.auditor }} </a>
+            <span class="material-icons" @click="deleteLesson(descs.id)">delete_forever</span>
           </div>
         </div>
       </div>
@@ -83,7 +82,9 @@
       }),
       ...mapGetters({
         getSchedulesDatesById: 'getSchedulesDatesById',
-        getSchedulesDates: 'getSchedulesDates'
+        getDescriptionsById: 'getDescriptionsById',
+        getSchedulesDates: 'getSchedulesDates',
+        getDescriptionIndexByID: 'getDescriptionIndexByID'
       })
     },
     data: () => {
@@ -97,7 +98,6 @@
         repeat: '',
         group: '',
         pEdit: 0,
-        editId: -1,
         description: 'расписание'
       }
     },
@@ -106,10 +106,10 @@
         getDefaultCars: 'getDefaultCars'
       }),
       ...mapMutations({
-        setCars: 'setCars',
         setSchedulesDates: 'setSchedulesDates',
         setDescriptions: 'setDescriptions'
       }),
+
       showPopupInfo() {
         this.isInfoPopupVisible = true;
         this.date = '';
@@ -122,32 +122,24 @@
       closeInfoPopup() {
         this.isInfoPopupVisible = false;
       },
-      submit() {
-        const schedulesDates = this.schedulesDates;
-        const schedulesDate = {
-          id: schedulesDates.length + 1,
-          date: '2020-17-02'
-        };
-
-        this.setSchedulesDates([schedulesDate].concat(schedulesDates));
-
-      },
       addRow() {
-        let maxPId = this.schedulesDates.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
+
 
         let findDate = this.schedulesDates.find(e => e.date === this.date);
 
         let schedulesDates = this.schedulesDates;
 
-        let schedulesDate = {
-          id: schedulesDates.length + 1,
-          date: this.date
-        };
+        // let maxPId = this.schedulesDates.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
+        let maxPId = schedulesDates.length + 1
 
         let Descriptions = this.Descriptions;
+
         let maxId = Descriptions.length + 1;
 
-        console.log(Descriptions);
+        if (findDate) {
+          maxPId = findDate.id
+
+        }
 
         let schedulesDescription = {
           time: this.time,
@@ -160,15 +152,15 @@
           group: "3360"
         };
 
-
-        if (findDate) {
-          maxPId = findDate.id
-        }
-
         //
 
         if (this.date) {
           if (!findDate) {
+
+            let schedulesDate = {
+              id: schedulesDates.length + 1,
+              date: this.date
+            };
             this.setSchedulesDates([schedulesDate].concat(schedulesDates));
           }
 
@@ -180,8 +172,12 @@
         }
       },
       findLesson(id) {
-        let findLes = this.Descriptions.find(e => e.id === id);
-        let findDate = this.schedulesDates.find(e => e.id === findLes.pId);
+        // let findLes = this.Descriptions.find(e => e.id === id);
+        // let findDate = this.schedulesDates.find(e => e.id === findLes.pId);
+
+        let findLes = this.getDescriptionsById(id)
+        let findDate = this.getSchedulesDatesById(findLes.pId);
+
 
         this.isInfoPopupVisible = true;
 
@@ -199,13 +195,14 @@
 
       },
       changelesson() {
-        const index = this.Descriptions.findIndex(n => n.id === this.editId);
+        let index = this.getDescriptionIndexByID(this.editId);
 
-        let findLes = this.Descriptions.find(e => e.id === this.editId);
+        // let findLes = this.Descriptions.find(e => e.id === this.editId);
 
-        if (index !== -1) {
-          this.Descriptions.splice(index, 1);
-        }
+        let findLes = this.getDescriptionsById(this.editId)
+
+
+        this.Descriptions.splice(index, 1);
 
         this.Descriptions.push({
 
@@ -221,6 +218,11 @@
         });
 
         this.isInfoPopupVisible = false;
+      },
+      deleteLesson(id) {
+        let index = this.getDescriptionIndexByID(id);
+
+        this.Descriptions.splice(index, 1);
       }
     }
   }

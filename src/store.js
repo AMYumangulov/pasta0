@@ -64,6 +64,9 @@ export default new Vuex.Store({
     },
     getDescriptionsById: state => id => {
       return state.Descriptions.filter(c => c.id === window.Number(id))[0] || null;
+    },
+    getDescriptionIndexByID: state => id => {
+      return state.Descriptions.findIndex(n => n.id === id);
     }
   },
   mutations: {
