@@ -9,6 +9,7 @@ export default new Vuex.Store({
       name: 'lada',
       id: 1
     }],
+    // lessonpopup: { type: 'lessonpopup', data: твоя инфа },
     schedulesDates: [
       {
         id: 1,

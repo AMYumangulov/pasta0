@@ -87,6 +87,7 @@
         getDescriptionIndexByID: 'getDescriptionIndexByID'
       })
     },
+
     data: () => {
       return {
         isInfoPopupVisible: false,
@@ -101,6 +102,11 @@
         description: 'расписание'
       }
     },
+    // watch: {
+    //   date() {
+    //     console.log(this.date);
+    //   }
+    // },
     methods: {
       ...mapActions({
         getDefaultCars: 'getDefaultCars'
@@ -123,10 +129,6 @@
         this.isInfoPopupVisible = false;
       },
       addRow() {
-
-
-        let findDate = this.schedulesDates.find(e => e.date === this.date);
-
         let schedulesDates = this.schedulesDates;
 
         // let maxPId = this.schedulesDates.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
@@ -135,7 +137,7 @@
         let Descriptions = this.Descriptions;
 
         let maxId = Descriptions.length + 1;
-
+        let findDate = this.schedulesDates.find(e => e.date === this.date);
         if (findDate) {
           maxPId = findDate.id
 
@@ -195,34 +197,77 @@
 
       },
       changelesson() {
-        let index = this.getDescriptionIndexByID(this.editId);
+        let schedulesDates = this.schedulesDates;
 
-        // let findLes = this.Descriptions.find(e => e.id === this.editId);
+        let findDate = this.schedulesDates.find(e => e.date === this.date);
+
 
         let findLes = this.getDescriptionsById(this.editId)
 
+        let curDate =  this.schedulesDates.find(e => e.id === findLes.pId);
 
+        let index = this.getDescriptionIndexByID(this.editId);
         this.Descriptions.splice(index, 1);
 
-        this.Descriptions.push({
+        if (findDate) {
+          console.log(findDate.id);
+          // let findLes = this.Descriptions.find(e => e.id === this.editId);
+          this.Descriptions.push({
 
-          time: this.time,
-          id: findLes.id,
-          pId: findLes.pId,
-          shedulesDescription: this.shedulesDescription,
-          lesson: this.lesson,
-          auditor: this.auditor,
-          repeat: 0,
-          group: "3360"
+            time: this.time,
+            id: findLes.id,
+            pId: findDate.id,
+            shedulesDescription: this.shedulesDescription,
+            lesson: this.lesson,
+            auditor: this.auditor,
+            repeat: 0,
+            group: "3360"
 
-        });
+          });
+
+        }
+        else {
+          let schedulesDate = {
+            id: schedulesDates.length + 1,
+            date: this.date
+          };
+          this.setSchedulesDates([schedulesDate].concat(schedulesDates));
+
+          this.Descriptions.push({
+            time: this.time,
+            id: findLes.id,
+            pId: schedulesDate.id,
+            shedulesDescription: this.shedulesDescription,
+            lesson: this.lesson,
+            auditor: this.auditor,
+            repeat: 0,
+            group: "3360"
+
+          });
+        }
+
+
+        let curDesc = this.Descriptions.find(e => e.pId === curDate.id);
+        if (!curDesc){
+          let curIndexDate = this.schedulesDates.findIndex(n => n.id === curDate.id);
+          this.schedulesDates.splice(curIndexDate, 1);
+        }
 
         this.isInfoPopupVisible = false;
       },
       deleteLesson(id) {
         let index = this.getDescriptionIndexByID(id);
+        let curDescPid = this.Descriptions.find(e => e.id === id).pId;
+        let curDate = this.schedulesDates.find(e => e.id === curDescPid);
+
 
         this.Descriptions.splice(index, 1);
+
+        let descByPid = this.Descriptions.find(e => e.pId === curDescPid);
+        if (!descByPid){
+          let curIndexDate = this.schedulesDates.findIndex(n => n.id === curDate.id);
+          this.schedulesDates.splice(curIndexDate, 1);
+        }
       }
     }
   }
